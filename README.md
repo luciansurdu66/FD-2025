@@ -11,7 +11,7 @@
 
 1. **Clone or download this repository**
    ```bash
-   git clone [<repository-url>](https://github.com/luciansurdu66/FD-2025/)
+   git clone https://github.com/luciansurdu66/FD-2025/
    ```
 
 2. **Open Chrome Extensions Page**
