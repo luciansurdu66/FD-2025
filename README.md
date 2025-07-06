@@ -27,9 +27,6 @@
    - Click the puzzle piece icon in Chrome's toolbar
    - Find "Site Watch Time Tracker" and click the pin icon
 
-### Method 2: Chrome Web Store (Future)
-*This extension will be available on the Chrome Web Store once published.*
-
 ## Usage
 
 ### Getting Started
