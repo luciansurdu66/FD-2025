@@ -1,0 +1,26 @@
+{
+  "name": "site-watch-time-tracker",
+  "private": true,
+  "version": "1.0.0",
+  "description": "A Chrome extension that tracks your watch time per website with detailed analytics and insights",
+  "scripts": {
+    "build:extension": "node build.js",
+    "copy-libs": "mkdir -p dist/libs && cp libs/chart.min.js dist/libs/chart.min.js"
+  },
+  "keywords": [
+    "chrome-extension",
+    "time-tracking",
+    "productivity",
+    "analytics",
+    "watch-time",
+    "browser-extension",
+    "typescript",
+    "tailwind",
+    "privacy-focused"
+  ],
+  "author": "Framework Design Assessment",
+  "license": "MIT",
+  "devDependencies": {
+    "tailwindcss": "^4.1.11"
+  }
+}

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Site Watch Time Tracker</title>
+        <style>
+            /* Minimal, modern dark mode CSS for Chrome extension */
+            :root {
+                --bg: #181a20;
+                --bg-alt: #23262f;
+                --card: #23262f;
+                --border: #23262f;
+                --text: #f1f1f1;
+                --text-muted: #b0b3c0;
+                --primary: #3b82f6;
+                --success: #22d3ee;
+                --danger: #ef4444;
+                --shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            }
+            body {
+                background: var(--bg);
+                color: var(--text);
+                font-family: "Inter", "Segoe UI", Arial, sans-serif;
+                margin: 0;
+            }
+            .popup-container {
+                width: 340px;
+                margin: 0 auto;
+                padding: 0 0 1rem 0;
+            }
+            .header {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                padding: 1rem 1.25rem 0.5rem 1.25rem;
+                background: var(--bg);
+            }
+            .header h1 {
+                font-size: 1.25rem;
+                font-weight: 700;
+                margin: 0;
+                letter-spacing: -0.5px;
+            }
+            .card {
+                background: var(--card);
+                border-radius: 0.75rem;
+                box-shadow: var(--shadow);
+                padding: 1rem 1.25rem;
+                margin-bottom: 1.1rem;
+            }
+            .stats-grid {
+                display: flex;
+                justify-content: space-between;
+                gap: 1.5rem;
+                margin-top: 0.5rem;
+            }
+            .stat {
+                text-align: center;
+            }
+            .stat-value {
+                font-size: 1.5rem;
+                font-weight: 700;
+                margin-bottom: 0.1rem;
+            }
+            .stat-label {
+                color: var(--text-muted);
+                font-size: 0.92rem;
+                font-weight: 400;
+            }
+            .button,
+            button {
+                background: var(--primary);
+                color: #fff;
+                border: none;
+                border-radius: 0.5rem;
+                padding: 0.55rem 1.1rem;
+                font-size: 1rem;
+                font-weight: 600;
+                cursor: pointer;
+                box-shadow: var(--shadow);
+                transition: background 0.18s, box-shadow 0.18s;
+                margin-top: 0.5rem;
+            }
+            .button:hover,
+            button:hover,
+            .button:focus,
+            button:focus {
+                background: #2563eb;
+                outline: none;
+                box-shadow: 0 0 0 2px var(--primary), var(--shadow);
+            }
+            .button-secondary {
+                background: var(--bg-alt);
+                color: var(--text-muted);
+                border: 1px solid var(--border);
+                font-size: 0.98rem;
+                font-weight: 500;
+                margin-top: 0.5rem;
+                box-shadow: none;
+            }
+            .button-secondary:hover,
+            .button-secondary:focus {
+                background: var(--border);
+                color: var(--text);
+            }
+            .status-dot {
+                width: 0.7rem;
+                height: 0.7rem;
+                border-radius: 50%;
+                display: inline-block;
+                margin-right: 0.4rem;
+                vertical-align: middle;
+            }
+            .status-dot.active {
+                background: #22d3ee;
+            }
+            .status-dot.paused {
+                background: var(--danger);
+            }
+            .site-list {
+                max-height: 8rem;
+                overflow-y: auto;
+                margin: 0.5rem 0 0 0;
+                padding: 0;
+                list-style: none;
+            }
+            .site-list-item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0.5rem 0;
+                border-bottom: 1px solid var(--border);
+            }
+            .site-list-item:last-child {
+                border-bottom: none;
+            }
+            .site-domain {
+                font-weight: 500;
+                color: var(--text);
+            }
+            .site-time {
+                font-weight: 600;
+                color: var(--primary);
+            }
+            .settings-modal {
+                background: rgba(0, 0, 0, 0.7);
+                position: fixed;
+                inset: 0;
+                z-index: 100;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .settings-content {
+                background: var(--bg-alt);
+                border-radius: 0.75rem;
+                padding: 1.5rem 1.2rem;
+                min-width: 280px;
+                box-shadow: var(--shadow);
+            }
+            .settings-content label {
+                color: var(--text-muted);
+                font-size: 0.97rem;
+            }
+            .settings-content input[type="number"] {
+                background: var(--bg);
+                color: var(--text);
+                border: 1px solid var(--border);
+                border-radius: 0.5rem;
+                padding: 0.5rem 0.75rem;
+                margin-top: 0.25rem;
+                width: 100%;
+            }
+            .settings-content input[type="checkbox"] {
+                accent-color: var(--primary);
+            }
+            .settings-content .button-danger {
+                background: var(--danger);
+                color: #fff;
+                margin-top: 1rem;
+            }
+            .settings-content .button-danger:hover {
+                background: #b91c1c;
+            }
+            ::-webkit-scrollbar {
+                width: 8px;
+                background: var(--bg-alt);
+            }
+            ::-webkit-scrollbar-thumb {
+                background: var(--border);
+                border-radius: 4px;
+            }
+            .text-muted {
+                color: var(--text-muted);
+                font-size: 0.97rem;
+                font-weight: 400;
+            }
+            .settings-btn-row {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                margin-top: 0.5rem;
+            }
+            .settings-btn-row .button-secondary {
+                flex: 1;
+                margin: 0;
+            }
+            .hidden {
+                display: none !important;
+            }
+            .flex-row {
+                display: flex;
+                align-items: center;
+            }
+            .space-between {
+                justify-content: space-between;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="popup-container">
+            <div class="header">
+                <h1>Watch Time Tracker</h1>
+            </div>
+            <div class="card">
+                <span id="trackingStatus" class="status-dot paused"></span>
+                <span id="statusText" class="text-muted">Paused</span>
+                <button id="toggleBtn" class="button" type="button">
+                    Start Tracking
+                </button>
+            </div>
+            <div class="card">
+                <h2 style="font-size: 1.1rem; margin-bottom: 0.5rem">
+                    Today's Summary
+                </h2>
+                <div class="stats-grid">
+                    <div class="stat">
+                        <div id="todayTotal" class="stat-value">0h 0m</div>
+                        <div class="stat-label">Total Time</div>
+                    </div>
+                    <div class="stat">
+                        <div id="todaySites" class="stat-value">0</div>
+                        <div class="stat-label">Sites Visited</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <h2 style="font-size: 1.1rem; margin-bottom: 0.5rem">
+                    Top Sites Today
+                </h2>
+                <ul id="siteList" class="site-list">
+                    <li
+                        class="text-muted"
+                        style="text-align: center; padding: 1rem"
+                    >
+                        No data yet
+                    </li>
+                </ul>
+                <button
+                    id="viewAllBtn"
+                    class="button button-secondary"
+                    type="button"
+                    style="margin-top: 0.7rem"
+                >
+                    View All
+                </button>
+            </div>
+            <div class="settings-btn-row">
+                <button
+                    id="settingsBtn"
+                    class="button button-secondary"
+                    type="button"
+                    style="
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                        justify-content: center;
+                    "
+                >
+                    <span style="font-size: 1.2rem">⚙️</span>
+                    <span>Settings</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="settingsModal" class="settings-modal hidden">
+            <div class="settings-content">
+                <div class="flex-row space-between">
+                    <h3 style="font-size: 1.1rem">Settings</h3>
+                    <button
+                        id="closeSettings"
+                        class="button button-secondary"
+                        type="button"
+                    >
+                        ✕
+                    </button>
+                </div>
+                <div style="margin-top: 1.2rem">
+                    <label
+                        ><input type="checkbox" id="autoPause" /> Auto-pause on
+                        inactivity</label
+                    >
+                </div>
+                <div style="margin-top: 1rem">
+                    <label for="pauseThreshold">Pause after (minutes)</label>
+                    <input type="number" id="pauseThreshold" min="1" max="60" />
+                </div>
+                <button
+                    id="clearDataBtn"
+                    class="button button-danger"
+                    type="button"
+                >
+                    Clear All Data
+                </button>
+            </div>
+        </div>
+
+        <script src="popup.js"></script>
+    </body>
+</html>

@@ -1,0 +1,248 @@
+/* Minimal, modern dark mode CSS for Chrome extension */
+:root {
+    --bg: #181a20;
+    --bg-alt: #23262f;
+    --card: #23262f;
+    --border: #2a2d36;
+    --text: #f1f1f1;
+    --text-muted: #b0b3c0;
+    --primary: #3b82f6;
+    --success: #22d3ee;
+    --danger: #ef4444;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    margin: 0;
+}
+
+.header,
+.sticky-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+h1,
+h2,
+h3 {
+    margin: 0;
+    font-weight: 700;
+}
+
+.card {
+    background: var(--card);
+    border-radius: 1rem;
+    box-shadow: var(--shadow);
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+    max-height: 400px;
+    overflow: auto;
+}
+
+.card canvas {
+    max-height: 350px;
+    width: 100% !important;
+    height: auto !important;
+    display: block;
+    margin: 0 auto;
+}
+
+.chart-container {
+    max-height: 350px;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.chart-container canvas {
+    max-height: 350px;
+    width: 100% !important;
+    height: auto !important;
+    display: block;
+    margin: 0 auto;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.stat-label {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.button,
+button {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: background 0.2s, box-shadow 0.2s;
+}
+.button:hover,
+button:hover,
+.button:focus,
+button:focus {
+    background: #2563eb;
+    outline: none;
+    box-shadow: 0 0 0 2px var(--primary), var(--shadow);
+}
+
+.button-secondary {
+    background: var(--bg-alt);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+}
+.button-secondary:hover,
+.button-secondary:focus {
+    background: var(--border);
+    color: var(--text);
+}
+
+.status-dot {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 0.5rem;
+}
+.status-dot.active {
+    background: #22d3ee;
+}
+.status-dot.paused {
+    background: var(--danger);
+}
+
+.site-list {
+    max-height: 12rem;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.site-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+}
+.site-list-item:last-child {
+    border-bottom: none;
+}
+.site-domain {
+    font-weight: 500;
+    color: var(--text);
+}
+.site-time {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.settings-modal {
+    background: rgba(0, 0, 0, 0.7);
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.settings-content {
+    background: var(--bg-alt);
+    border-radius: 1rem;
+    padding: 2rem 1.5rem;
+    min-width: 320px;
+    box-shadow: var(--shadow);
+}
+.settings-content label {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+.settings-content input[type="number"] {
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    margin-top: 0.25rem;
+    width: 100%;
+}
+.settings-content input[type="checkbox"] {
+    accent-color: var(--primary);
+}
+.settings-content .button-danger {
+    background: var(--danger);
+    color: #fff;
+    margin-top: 1rem;
+}
+.settings-content .button-danger:hover {
+    background: #b91c1c;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card);
+    border-radius: 1rem;
+    overflow: hidden;
+}
+.table th,
+.table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+}
+.table th {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: var(--bg-alt);
+}
+.table tr {
+    border-bottom: 1px solid var(--border);
+}
+.table tr:last-child {
+    border-bottom: none;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    background: var(--bg-alt);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+}
+
+.popup-container {
+    width: 360px;
+    margin: 0 auto;
+    padding: 0 0 1rem 0;
+}
